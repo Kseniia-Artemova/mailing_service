@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import CreateView
+from django.views.generic import CreateView, ListView
 from mailing.models import Client, Message, Log, Mailing
 
 # Create your views here.
@@ -25,3 +25,8 @@ class ClientCreateView(CreateView):
     model = Client
     template_name = 'mailing/recipient_form.html'
     fields = ('name', 'email', 'comment')
+
+
+class ClientListView(ListView):
+    model = Client
+    template_name = 'mailing/recipients_list.html'

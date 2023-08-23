@@ -52,3 +52,27 @@ body {
     background-color: #2db9c9bd;
     border-color: #00e0ffbf;
 }
+
+.btn-warning.btn-warning-special {
+    color: #ffffff;
+    background-color: #1a949b94;
+    border-color: #0f9d7a00;
+}
+
+.btn-warning.btn-warning-special:hover {
+    color: #ffffff;
+    background-color: #1a949b;
+    border-color: #0f9d7a00;
+}
+
+.btn-danger.btn-danger-special {
+    color: #fff;
+    background-color: #dc3545c4;
+    border-color: #bd2130;
+}
+
+.btn-danger.btn-danger-special:hover {
+    color: #fff;
+    background-color: #c82333;
+    border-color: #bd2130;
+}

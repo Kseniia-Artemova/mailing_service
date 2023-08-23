@@ -12,21 +12,18 @@
         <form class="needs-validation" action="{% url 'mailing:home' %}" method="post" novalidate>
             {% csrf_token %}
             <!-- Выбор контактов -->
-                <div class="mb-3" id="contactsContainer">
-                    <label>Контакты</label>
-                    <div class="contact-select mb-2">
-                        <select class="form-control mb-2" name="contacts">
-                            <option>Контакт 1</option>
-                            <option>Контакт 2</option>
-                            <!-- ... -->
-                        </select>
-                    </div>
-                    <button type="button" id="addContactButton">+</button>
+                <div class="mb-3">
+                    <label for="contacts">Получатели</label>
+                    <select id="contacts" multiple="multiple" class="form-control" style="width: 100%">
+                        <option value="Контакт 1">Контакт 1</option>
+                        <option value="Контакт 2">Контакт 2</option>
+                        <!-- ... -->
+                    </select>
                 </div>
                 <!-- Частота рассылки -->
                 <div class="mb-3">
                     <label for="frequency">Частота рассылки</label>
-                    <select class="form-control" id="frequency" name="fre" onchange="showDateFields(this)">
+                    <select class="form-control" id="frequency" name="frequency" onchange="showDateFields(this)">
                         <option value="" selected disabled>Выберите частоту</option>
                         <option value="once">Один раз</option>
                         <option value="daily">Каждый день</option>

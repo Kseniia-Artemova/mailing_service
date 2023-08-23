@@ -1,0 +1,59 @@
+{% extends 'mailing/base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 order-md-1 text-center"> <!-- Добавлен класс text-center -->
+        <h4 class="mb-3">Новая рассылка</h4>
+
+        <div class="col-md-4 mx-auto">
+            <form class="needs-validation" action="{% url 'mailing:home' %}" method="post" novalidate>
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="last_name">Фамилия</label>
+                        <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Иванов"
+                               value=""
+                               required>
+                        <div class="invalid-feedback">
+                            Заполните поле Фамилия корректно
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="first_name">Имя</label>
+                        <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Иван"
+                               value=""
+                               required>
+                        <div class="invalid-feedback">
+                            Заполните поле Имя корректно
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="father_name">* Отчество</label>
+                        <input type="text" class="form-control" id="father_name" name="father_name"
+                               placeholder="Иванович"
+                               value="">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="email">Email </label>
+                    <input type="email" class="form-control" id="email" placeholder="IvanIvanov@example.com" required>
+                    <div class="invalid-feedback">
+                        Пожалуйста, введите валидный e-mail
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="comment">* Комментарий</label>
+                    <textarea class="form-control" id="comment" name="comment" rows="3" placeholder=""></textarea>
+                </div>
+
+                <span class="text-muted">* необязательные поля</span>
+
+                <hr class="mb-4">
+                <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -56,13 +56,13 @@ body {
 .btn-warning.btn-warning-special {
     color: #ffffff;
     background-color: #1a949b94;
-    border-color: #0f9d7a00;
+    border-color: #0b8f87eb;
 }
 
 .btn-warning.btn-warning-special:hover {
     color: #ffffff;
     background-color: #1a949b;
-    border-color: #0f9d7a00;
+    border-color: #0b8f87eb;
 }
 
 .btn-danger.btn-danger-special {

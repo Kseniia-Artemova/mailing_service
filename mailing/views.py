@@ -96,7 +96,7 @@ class MailingListView(ListView):
 
 class MailingCreateView(CreateView):
     model = Mailing
-    template_name = 'mailing/mailing_form.htmlgit'
+    template_name = 'mailing/mailing_form.html'
     fields = ('recipients', 'timedate', 'frequency', 'message')
     success_url = reverse_lazy('mailing:mailing_list')
     extra_context = {

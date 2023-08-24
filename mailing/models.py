@@ -38,8 +38,8 @@ class Log(models.Model):
         return f'{self.timedate}: {self.server_response}, {self.status}'
 
     class Meta:
-        verbose_name = 'Сообщение'
-        verbose_name_plural = 'Сообщения'
+        verbose_name = 'Лог'
+        verbose_name_plural = 'Логи'
 
 
 class Mailing(models.Model):

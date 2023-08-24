@@ -1,23 +1,35 @@
 {% extends 'mailing/base.html' %}
 {% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 order-md-1">
+        <h4 class="mb-3 text-center">Рассылки</h4>
 
-<div class="container mt-5">
+        <div class="container mt-5">
 
-    {% for object in object_list %}
-    <!-- Карточка контакта -->
-        <div class="card mb-3">
-            <div class="card-body">
-                <h5 class="card-title">{{ object.name }}</h5>
-                <p class="card-text"><strong>Email:</strong> {{ object.email }}</p>
-                <p class="card-text">{{ object.comment }}</p>
-
-                <a href="{% url 'mailing:update_recipient' object.pk %}" class="btn btn-warning btn-warning-special">Изменить</a>
-                <a href="{% url 'mailing:delete_recipient' object.pk %}" class="btn btn-danger btn-danger-special">Удалить</a>
+            <div class="mb-4">
+                <a href="{% url 'mailing:new_mailing' %}" class="btn btn-primary">Создать новую рассылку</a>
             </div>
+
+            {% for object in object_list %}
+            <!-- Карточка контакта -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">{{ object.message.subject }}</h5>
+                    <p class="card-text"><strong>Дата: </strong>{{ object.timedate }}</p>
+                    <p class="card-text"><strong>Периодичность: </strong>{{ object.frequency }}</p>
+
+                    <a href="{% url 'mailing:update_recipient' object.pk %}"
+                       class="btn btn-warning btn-warning-special">Детали</a>
+                    <a href="{% url 'mailing:update_mailing' object.pk %}"
+                       class="btn btn-warning btn-warning-special">Изменить</a>
+                    <a href="{% url 'mailing:delete_recipient' object.pk %}" class="btn btn-danger btn-danger-special">Удалить</a>
+                </div>
+            </div>
+
+            {% endfor %}
+
         </div>
-
-    {% endfor %}
-
+    </div>
 </div>
 
 {% endblock %}

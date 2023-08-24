@@ -87,3 +87,28 @@ class ClientDeleteView(DeleteView):
         context_data = super().get_context_data(**kwargs)
         context_data['object'] = Client.objects.get(pk=self.kwargs.get('pk'))
         return context_data
+
+
+class MailingListView(ListView):
+    model = Mailing
+    template_name = 'mailing/mailing_list.html'
+
+
+class MailingCreateView(CreateView):
+    model = Mailing
+    template_name = 'mailing/mailing_form.htmlgit'
+    fields = ('recipients', 'timedate', 'frequency', 'message')
+    success_url = reverse_lazy('mailing:mailing_list')
+    extra_context = {
+        'object_list': Client.objects.order_by('name')
+    }
+
+
+class MailingUpdateView(UpdateView):
+    model = Mailing
+    template_name = 'mailing/mailing_form.html'
+    fields = ('recipients', 'timedate', 'frequency', 'message')
+    success_url = reverse_lazy('mailing:mailing_list')
+    extra_context = {
+        'object_list': Client.objects.all()
+    }

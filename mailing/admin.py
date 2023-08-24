@@ -1,5 +1,5 @@
 from django.contrib import admin
-from models import Client, Message, Log, Mailing
+from mailing.models import Client, Message, Log, Mailing
 
 # Register your models here.
 

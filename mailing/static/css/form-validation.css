@@ -1,0 +1,88 @@
+.container {
+  max-width: 960px;
+}
+
+.border-top { border-top: 1px solid #e5e5e5; }
+.border-bottom { border-bottom: 1px solid #e5e5e5; }
+.border-top-gray { border-top-color: #adb5bd; }
+
+.box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
+
+.lh-condensed { line-height: 1.25; }
+
+.navbar-logo {
+    width: 3vw;
+    height: auto;
+}
+
+@media (max-width: 992px) {
+    .navbar-logo {
+        width: 4vw;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar-logo {
+        width: 6vw;
+    }
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
+}
+
+.navbar-text {
+    font-weight: bold;
+    font-size: 24px;
+    margin-right: 15px;
+}
+
+.custom-select-arrow-adjust {
+    background-position-x: 95%; /* Регулируйте этот процент, чтобы визуально подвинуть стрелку */
+}
+
+.btn-primary {
+    color: #504c4c;
+    background-color: #2db9c970;
+    border-color: #00e0ff03;
+}
+
+.btn-primary:hover {
+    color: #504c4c;
+    background-color: #2db9c9bd;
+    border-color: #00e0ffbf;
+}
+
+.btn-warning.btn-warning-special {
+    color: #ffffff;
+    background-color: #1a949b94;
+    border-color: #0b8f87eb;
+}
+
+.btn-warning.btn-warning-special:hover {
+    color: #ffffff;
+    background-color: #1a949b;
+    border-color: #0b8f87eb;
+}
+
+.btn-danger.btn-danger-special {
+    color: #fff;
+    background-color: #dc3545c4;
+    border-color: #bd2130;
+}
+
+.btn-danger.btn-danger-special:hover {
+    color: #fff;
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+
+input[type="text"], input[type="email"], textarea {
+    font-weight: bold;
+    color: #000;  /* Яркий черный цвет */
+}
+
+input[type="text"]::placeholder, input[type="email"]::placeholder, textarea::placeholder {
+    font-weight: normal;
+    color: #aaa;  /* Бледный серый цвет */
+}

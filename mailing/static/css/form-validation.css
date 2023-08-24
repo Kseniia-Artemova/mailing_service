@@ -76,3 +76,13 @@ body {
     background-color: #c82333;
     border-color: #bd2130;
 }
+
+input[type="text"], input[type="email"], textarea {
+    font-weight: bold;
+    color: #000;  /* Яркий черный цвет */
+}
+
+input[type="text"]::placeholder, input[type="email"]::placeholder, textarea::placeholder {
+    font-weight: normal;
+    color: #aaa;  /* Бледный серый цвет */
+}

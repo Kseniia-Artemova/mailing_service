@@ -6,7 +6,7 @@
         <h4 class="mb-3 text-center">{{ title }}</h4>
 
         <div class="col-md-4 mx-auto">
-            <form class="needs-validation" action="{% url 'mailing:home' %}" method="post" novalidate>
+            <form class="needs-validation" action="" method="post" novalidate>
                 {% csrf_token %}
                 <div class="row">
                     <div class="col-md-6 mb-3">
@@ -37,7 +37,7 @@
 
                 <div class="mb-3">
                     <label for="email">Email </label>
-                    <input type="email" class="form-control" id="email" placeholder="IvanIvanov@example.com" required
+                    <input type="email" class="form-control" id="email" name="email" placeholder="IvanIvanov@example.com" required
                     value="{{ object.email }}">
                     <div class="invalid-feedback">
                         Пожалуйста, введите валидный e-mail
@@ -46,7 +46,7 @@
 
                 <div class="mb-3">
                     <label for="comment">* Комментарий</label>
-                    <textarea class="form-control" id="comment" name="comment" rows="3" placeholder="">{{ object.comment }}</textarea>
+                    <textarea class="form-control" id="comment" name="comment" rows="3" placeholder="...">{{ object.comment }}</textarea>
                 </div>
 
                 <span class="text-muted">* необязательные поля</span>

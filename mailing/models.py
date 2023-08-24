@@ -7,6 +7,7 @@ class Client(models.Model):
     email = models.EmailField(max_length=60, verbose_name='e-mail')
     name = models.CharField(max_length=150, verbose_name='ФИО')
     comment = models.TextField(null=True, blank=True, verbose_name='Комментарий')
+    changing_data = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.name} {self.email}"

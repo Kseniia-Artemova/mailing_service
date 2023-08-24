@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
+
+from mailing.forms import ClientForm
 from mailing.models import Client, Message, Log, Mailing
 
 # Create your views here.
@@ -10,49 +12,70 @@ class HomeView(CreateView):
     model = Mailing
     template_name = 'mailing/home.html'
     fields = ('recipients', 'timedate', 'frequency', 'message')
-
-    def post(self, request, *args, **kwargs):
-        print(request.POST.getlist('recipients'))
-        print(request.POST.get('frequency'))
-        print(request.POST.get('subject'))
-        print(request.POST.get('body'))
-        print(request.POST.get('schedule_time'))
-        print(request.POST.get('schedule_date'))
-
-        return super().post(request, *args, **kwargs)
+    extra_context = {
+        'object_list': Client.objects.order_by('name')
+    }
 
 
 class ClientCreateView(CreateView):
     model = Client
     template_name = 'mailing/recipient_form.html'
-    fields = ('name', 'email', 'comment')
+    form_class = ClientForm
+    success_url = reverse_lazy('mailing:recipients_list')
     extra_context = {
         'title': 'Создать контакт',
         'button': 'Создать',
     }
-    success_url = reverse_lazy('mailing:recipients_list')
+
+    def form_valid(self, form):
+        last_name = form.cleaned_data.get('last_name').strip()
+        first_name = form.cleaned_data.get('first_name').strip()
+        father_name = form.cleaned_data.get('father_name', '').strip()
+
+        full_name = f"{last_name} {first_name} {father_name}".strip().title()
+
+        form.instance.name = full_name
+
+        return super().form_valid(form)
 
 
 class ClientListView(ListView):
     model = Client
     template_name = 'mailing/recipients_list.html'
 
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['object_list'] = Client.objects.order_by('-changing_data')
+        return context_data
+
 
 class ClientUpdateView(UpdateView):
     model = Client
     template_name = 'mailing/recipient_form.html'
     success_url = reverse_lazy('mailing:recipients_list')
-    fields = ('name', 'email', 'comment')
+    form_class = ClientForm
 
     def get_context_data(self, **kwargs) -> dict:
         context_data = super().get_context_data(**kwargs)
-        client = Client.objects.get(pk=self.kwargs.get('pk'))
         extra_context = {
-            'object': client,
+            'object': Client.objects.get(pk=self.kwargs.get('pk')),
             'title': 'Изменить контакт',
             'button': 'Изменить',
         }
         return context_data | extra_context
+
+    def form_valid(self, form):
+        last_name = form.cleaned_data.get('last_name').strip()
+        first_name = form.cleaned_data.get('first_name').strip()
+        father_name = form.cleaned_data.get('father_name', '').strip()
+
+        full_name = f"{last_name} {first_name} {father_name}".strip().title()
+
+        form.instance.name = full_name
+        print(form.instance.id)
+        print(self.request.method)
+
+        return super().form_valid(form)
 
 
 class ClientDeleteView(DeleteView):

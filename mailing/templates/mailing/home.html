@@ -15,9 +15,10 @@
                 <div class="mb-3">
                     <label for="recipients">Получатели</label>
                     <select id="recipients" name='recipients' multiple="multiple" class="form-control" style="width: 100%">
-                        <option value="Контакт 1">Контакт 1</option>
-                        <option value="Контакт 2">Контакт 2</option>
-                        <!-- ... -->
+                        {% for object in object_list %}
+                        <option value="{{ object.pk }}">{{ object.name}}</option>
+
+                        {% endfor %}
                     </select>
                 </div>
                 <!-- Частота рассылки -->

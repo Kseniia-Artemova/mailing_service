@@ -1,0 +1,25 @@
+{% extends 'mailing/base.html' %}
+{% block content %}
+<div class="center-content">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 content-box"> <!-- Добавлен класс content-box -->
+                <h2 class="text-center">Подтвердите удаление</h2>
+                <p class="text-center">Вы уверены, что хотите удалить</p>
+                <p class="text-center">{{ object.message.subject }} {{ object.timedate }}</p>
+                <form method="post" action="" class="text-center mt-4"> <!-- Добавлен отступ сверху mt-4 -->
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button class="btn btn-danger btn-danger-special" type="submit">Удалить</button>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{% url 'mailing:mailing_list' %}" class="btn btn-warning btn-warning-special">Отмена</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

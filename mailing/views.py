@@ -60,7 +60,7 @@ class ClientUpdateView(UpdateView):
         extra_context = {
             'object': Client.objects.get(pk=self.kwargs.get('pk')),
             'title': 'Изменить контакт',
-            'button': 'Изменить',
+            'button': 'Сохранить',
         }
         return context_data | extra_context
 
@@ -100,7 +100,9 @@ class MailingCreateView(CreateView):
     fields = ('recipients', 'timedate', 'frequency', 'message')
     success_url = reverse_lazy('mailing:mailing_list')
     extra_context = {
-        'object_list': Client.objects.order_by('name')
+        'object_list': Client.objects.order_by('name'),
+        'title': 'Создать рассылку',
+        'button': 'Создать',
     }
 
 
@@ -109,6 +111,28 @@ class MailingUpdateView(UpdateView):
     template_name = 'mailing/mailing_form.html'
     fields = ('recipients', 'timedate', 'frequency', 'message')
     success_url = reverse_lazy('mailing:mailing_list')
-    extra_context = {
-        'object_list': Client.objects.all()
-    }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        mailing = self.get_object()
+        context['title'] = 'Изменить рассылку'
+        context['button'] = 'Сохранить'
+        context['mailing'] = mailing
+        context['mailing_schedule_date'] = mailing.timedate.strftime('%Y-%m-%d')
+        context['mailing_schedule_time'] = mailing.timedate.strftime('%H:%M')
+        print(context['mailing_schedule_date'])
+        print(context['mailing_schedule_time'])
+        context['object_list'] = Client.objects.all()
+        context['recipient_ids'] = list(mailing.recipients.values_list('id', flat=True))
+        return context
+
+
+class MailingDeleteView(DeleteView):
+    model = Mailing
+    template_name = 'mailing/mailing_delete.html'
+    success_url = reverse_lazy('mailing:mailing_list')
+
+    def get_context_data(self, **kwargs) -> dict:
+        context_data = super().get_context_data(**kwargs)
+        context_data['object'] = Mailing.objects.get(pk=self.kwargs.get('pk'))
+        return context_data

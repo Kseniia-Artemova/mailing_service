@@ -2,22 +2,21 @@
 {% block content %}
     <div class="container">
       <div class="py-5 text-center">
-        <h2>Создать рассылку</h2>
+        <h2>{{ title }}</h2>
         <p class="lead">Пожалуйста, заполните все обязательные поля новой рассылки</p>
       </div>
 
 <div class="row justify-content-center">
     <div class="col-md-8 order-md-1">
         <h4 class="mb-3">Новая рассылка</h4>
-        <form class="needs-validation" action="{% url 'mailing:home' %}" method="post" novalidate>
+        <form class="needs-validation" action="" method="post" novalidate>
             {% csrf_token %}
             <!-- Выбор контактов -->
                 <div class="mb-3">
                     <label for="recipients">Получатели</label>
                     <select id="recipients" name='recipients' multiple="multiple" class="form-control" style="width: 100%">
                         {% for object in object_list %}
-                        <option value="{{ object.pk }}">{{ object.name}}</option>
-
+                            <option value="{{ object.pk }}" {% if object.pk in recipient_ids %}selected{% endif %}>{{ object.name}}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -25,12 +24,12 @@
                 <div class="mb-3">
                     <label for="frequency">Частота рассылки</label>
                     <select class="form-control" id="frequency" name="frequency" onchange="showDateFields(this)">
-                        <option value="" selected disabled>Выберите частоту</option>
-                        <option value="once">Один раз</option>
-                        <option value="daily">Каждый день</option>
-                        <option value="weekly">Каждую неделю</option>
-                        <option value="monthly">Каждый месяц</option>
-                        <option value="yearly">Каждый год</option>
+                        <option value="" {% if not mailing %}selected disabled{% endif %}>Выберите частоту</option>
+                        <option value="once" {% if mailing and mailing.frequency == "once" %}selected{% endif %}>Один раз</option>
+                        <option value="daily" {% if mailing and mailing.frequency == "daily" %}selected{% endif %}>Каждый день</option>
+                        <option value="weekly" {% if mailing and mailing.frequency == "weekly" %}selected{% endif %}>Каждую неделю</option>
+                        <option value="monthly" {% if mailing and mailing.frequency == "monthly" %}selected{% endif %}>Каждый месяц</option>
+                        <option value="yearly"{% if mailing and mailing.frequency == "yearly" %}selected{% endif %}>Каждый год</option>
                     </select>
                 </div>
                 <!-- Поле для даты и времени -->
@@ -39,14 +38,21 @@
                 </div>
                 <div class="mb-3">
                     <label for="subject">Тема</label>
-                    <input type="text" class="form-control" id="subject" name="subject" placeholder="Введите тему сообщения" required>
+                    <input type="text" class="form-control" id="subject" name="subject" placeholder="Введите тему сообщения" value="{{ mailing.message.subject|default:'' }}" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="body">Сообщение</label>
-                    <textarea class="form-control" id="body" name="body" rows="6" placeholder="Введите основной текст сообщения" required></textarea>
+                    <textarea class="form-control" id="body" name="body" rows="6" placeholder="Введите основной текст сообщения" required>{{ mailing.message.body|default:'' }}</textarea>
                 </div>
-                <button class="btn btn-primary btn-lg btn-block" type="submit">Создать</button>
+                <div class="row">
+                    <div class="col-md-6">
+                        <button class="btn btn-primary btn-lg btn-block" type="submit">{{ button }}</button>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="{% url 'mailing:mailing_list' %}" class="btn btn-warning btn-warning-special btn-lg btn-block">Отмена</a>
+                    </div>
+                </div>
             </form>
         </div>
     </div>

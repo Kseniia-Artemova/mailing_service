@@ -52,7 +52,7 @@ class Mailing(models.Model):
     timedate = models.DateTimeField(verbose_name='Дата и время рассылки')
     frequency = models.CharField(max_length=50, verbose_name='Периодичность')
     status = models.CharField(default='создана', choices=STATUS_CHOICES, max_length=10, verbose_name='Статус')
-    recipients = models.ForeignKey(Client, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='Получатели')
+    recipients = models.ManyToManyField(Client, blank=True, verbose_name='Получатели')
     message = models.ForeignKey(Message, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='Сообщение')
     logs = models.ForeignKey(Log, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='Логи')
 

@@ -86,3 +86,24 @@ input[type="text"]::placeholder, input[type="email"]::placeholder, textarea::pla
     font-weight: normal;
     color: #aaa;  /* Бледный серый цвет */
 }
+
+.center-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh; /* Занимает 80% от высоты экрана */
+}
+
+.content-box {
+    border: 1px solid #ddd;
+    padding: 20px;
+    box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1); /* тень для выделения блока */
+}
+
+.content-box h2 {
+    font-size: 24px; /* Увеличиваем размер текста заголовка */
+}
+
+.content-box p {
+    font-size: 18px; /* Увеличиваем размер основного текста */
+}

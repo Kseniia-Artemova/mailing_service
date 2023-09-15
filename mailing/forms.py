@@ -22,6 +22,24 @@ class MessageForm(forms.ModelForm):
 
 class MailingForm(forms.ModelForm):
 
+    start_time = forms.DateTimeField(
+        widget=forms.TextInput(attrs={'class': 'datetimepicker'})
+    )
+    end_time = forms.DateTimeField(
+        widget=forms.TextInput(attrs={'class': 'datetimepicker'})
+    )
+    recipients = forms.ModelMultipleChoiceField(
+        queryset=Client.objects.all(),
+        widget=forms.SelectMultiple(attrs={'class': 'select2'})
+    )
+
     class Meta:
         model = Mailing
         exclude = ('status',)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'mb-3'
+
+

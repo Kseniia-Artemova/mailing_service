@@ -1,8 +1,9 @@
+from django.forms import inlineformset_factory
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 
-from mailing.forms import ClientForm
+from mailing.forms import ClientForm, MailingForm, MessageForm
 from mailing.models import Client, Message, Log, Mailing
 
 # Create your views here.
@@ -11,10 +12,21 @@ from mailing.models import Client, Message, Log, Mailing
 class HomeView(CreateView):
     model = Mailing
     template_name = 'mailing/home.html'
-    fields = ('recipients', 'start_time', 'end_time', 'frequency', 'message')
-    extra_context = {
-        'object_list': Client.objects.order_by('name')
-    }
+    form_class = MailingForm
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+
+        VersionFormset = inlineformset_factory(Message, Mailing, form=MailingForm, extra=1, can_delete=False)
+        if self.request.method == 'POST':
+            formset = VersionFormset(self.request.POST, instance=self.object)
+        else:
+            formset = VersionFormset(instance=self.object)
+
+        context_data['object_list'] = Client.objects.order_by('name')
+        context_data['formset'] = formset
+
+        return context_data
 
 
 class ClientCreateView(CreateView):

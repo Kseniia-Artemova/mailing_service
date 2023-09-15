@@ -11,7 +11,7 @@ from mailing.models import Client, Message, Log, Mailing
 class HomeView(CreateView):
     model = Mailing
     template_name = 'mailing/home.html'
-    fields = ('recipients', 'timedate', 'frequency', 'message')
+    fields = ('recipients', 'start_time', 'end_time', 'frequency', 'message')
     extra_context = {
         'object_list': Client.objects.order_by('name')
     }
@@ -97,7 +97,7 @@ class MailingListView(ListView):
 class MailingCreateView(CreateView):
     model = Mailing
     template_name = 'mailing/mailing_form.html'
-    fields = ('recipients', 'timedate', 'frequency', 'message')
+    fields = ('recipients', 'start_time', 'end_time', 'frequency', 'message')
     success_url = reverse_lazy('mailing:mailing_list')
     extra_context = {
         'object_list': Client.objects.order_by('name'),
@@ -109,7 +109,7 @@ class MailingCreateView(CreateView):
 class MailingUpdateView(UpdateView):
     model = Mailing
     template_name = 'mailing/mailing_form.html'
-    fields = ('recipients', 'timedate', 'frequency', 'message')
+    fields = ('recipients', 'start_time', 'end_time', 'frequency', 'message')
     success_url = reverse_lazy('mailing:mailing_list')
 
     def get_context_data(self, **kwargs):

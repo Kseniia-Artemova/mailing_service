@@ -20,13 +20,13 @@ class MessageAdmin(admin.ModelAdmin):
 
 @admin.register(Log)
 class LogAdmin(admin.ModelAdmin):
-    list_display = ('timedate', 'status', 'server_response')
-    search_fields = ('timedate', 'status', 'server_response')
-    list_filter = ('timedate', 'status', 'server_response')
+    list_display = ('last_try', 'status', 'server_response', 'client', 'mailing')
+    search_fields = ('last_try', 'status', 'server_response')
+    list_filter = ('last_try', 'status', 'server_response')
 
 
 @admin.register(Mailing)
 class MailingAdmin(admin.ModelAdmin):
-    list_display = ('timedate', 'frequency', 'status', 'message')
-    search_fields = ('timedate', 'frequency', 'status', 'message')
-    list_filter = ('timedate', 'frequency', 'status', 'message')
+    list_display = ('start_time', 'end_time', 'frequency', 'status', 'message')
+    search_fields = ('start_time', 'end_time', 'frequency', 'status', 'message')
+    list_filter = ('start_time', 'end_time', 'frequency', 'status', 'message')

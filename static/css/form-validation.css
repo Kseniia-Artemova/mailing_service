@@ -107,3 +107,19 @@ input[type="text"]::placeholder, input[type="email"]::placeholder, textarea::pla
 .content-box p {
     font-size: 18px; /* Увеличиваем размер основного текста */
 }
+
+.static-textarea {
+    display: block;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #f8f9fa;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    overflow: auto;
+    resize: none; /* Убираем возможность растягивания */
+    min-height: 100px; /* Минимальная высота */
+}

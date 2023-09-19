@@ -1,7 +1,7 @@
 from django.forms import inlineformset_factory
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, UpdateView, DeleteView
+from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 
 from mailing.forms import ClientForm, MailingForm, MessageForm
 from mailing.models import Client, Message, Log, Mailing
@@ -145,3 +145,9 @@ class MailingDeleteView(DeleteView):
         context_data = super().get_context_data(**kwargs)
         context_data['object'] = Mailing.objects.get(pk=self.kwargs.get('pk'))
         return context_data
+
+
+class MailingDetailView(DetailView):
+    model = Mailing
+    template_name = 'mailing/mailing_card.html'
+

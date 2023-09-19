@@ -53,6 +53,16 @@ body {
     border-color: #00e0ffbf;
 }
 
+.btn-primary:active {
+    color: #504c4c !important;
+    background-color: #2db9c9bd !important;
+    border-color: #00e0ffbf !important;
+}
+
+.btn-primary:focus {
+    outline: none;
+}
+
 .btn-warning.btn-warning-special {
     color: #ffffff;
     background-color: #1a949b94;
@@ -65,6 +75,16 @@ body {
     border-color: #0b8f87eb;
 }
 
+.btn-warning.btn-warning-special:active {
+    color: #ffffff !important;
+    background-color: #1a949b !important;
+    border-color: #0b8f87eb !important;
+}
+
+.btn-warning.btn-warning-special:focus {
+    outline: none;
+}
+
 .btn-danger.btn-danger-special {
     color: #fff;
     background-color: #dc3545c4;
@@ -75,6 +95,16 @@ body {
     color: #fff;
     background-color: #c82333;
     border-color: #bd2130;
+}
+
+.btn-danger.btn-danger-special:active {
+    color: #fff !important;
+    background-color: #c82333 !important;
+    border-color: #bd2130 !important;
+}
+
+.btn-danger.btn-danger-special:focus {
+    outline: none;
 }
 
 input[type="text"], input[type="email"], textarea {
@@ -123,3 +153,4 @@ input[type="text"]::placeholder, input[type="email"]::placeholder, textarea::pla
     resize: none; /* Убираем возможность растягивания */
     min-height: 100px; /* Минимальная высота */
 }
+

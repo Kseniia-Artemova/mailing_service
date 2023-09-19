@@ -118,6 +118,7 @@ class ClientDeleteView(DeleteView):
 class MailingListView(ListView):
     model = Mailing
     template_name = 'mailing/mailing_list.html'
+    ordering = ['-updated_at']
 
 
 class MailingCreateView(MailingAndMessageSaveMixin, CreateView):

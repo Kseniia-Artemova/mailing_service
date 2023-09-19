@@ -12,11 +12,13 @@ class StyleFormMixin:
             field.widget.attrs['class'] = 'form-control'
 
 
-class ClientForm(forms.ModelForm):
+class ClientForm(StyleFormMixin, forms.ModelForm):
 
-    last_name = forms.CharField()
-    first_name = forms.CharField()
-    father_name = forms.CharField(required=False)
+    comment = forms.CharField(
+        required=False,
+        label='* Комментарий',
+        widget=forms.Textarea()
+    )
 
     class Meta:
         model = Client
@@ -41,11 +43,11 @@ class MailingForm(StyleFormMixin, forms.ModelForm):
 
     start_time = forms.DateTimeField(
         label='Время начала',
-        widget=DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'})
+        widget=DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'}, format='%Y-%m-%dT%H:%M')
     )
     end_time = forms.DateTimeField(
         label='Время окончания',
-        widget=DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'})
+        widget=DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'}, format='%Y-%m-%dT%H:%M')
     )
     recipients = forms.ModelMultipleChoiceField(
         label='Получатели',

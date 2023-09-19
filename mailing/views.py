@@ -56,9 +56,9 @@ class ClientCreateView(CreateView):
     }
 
     def form_valid(self, form):
-        last_name = form.cleaned_data.get('last_name').strip()
-        first_name = form.cleaned_data.get('first_name').strip()
-        father_name = form.cleaned_data.get('father_name', '').strip()
+        last_name = self.request.POST.get('last_name', '').strip()
+        first_name = self.request.POST.get('first_name', '').strip()
+        father_name = self.request.POST.get('father_name', '').strip()
 
         full_name = f"{last_name} {first_name} {father_name}".strip().title()
 
@@ -93,15 +93,13 @@ class ClientUpdateView(UpdateView):
         return context_data | extra_context
 
     def form_valid(self, form):
-        last_name = form.cleaned_data.get('last_name').strip()
-        first_name = form.cleaned_data.get('first_name').strip()
-        father_name = form.cleaned_data.get('father_name', '').strip()
+        last_name = self.request.POST.get('last_name', '').strip()
+        first_name = self.request.POST.get('first_name', '').strip()
+        father_name = self.request.POST.get('father_name', '').strip()
 
         full_name = f"{last_name} {first_name} {father_name}".strip().title()
 
         form.instance.name = full_name
-        print(form.instance.id)
-        print(self.request.method)
 
         return super().form_valid(form)
 

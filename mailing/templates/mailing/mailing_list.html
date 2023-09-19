@@ -15,8 +15,8 @@
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">{{ object.message.subject }}</h5>
-                    <p class="card-text"><strong>Дата: </strong>{{ object.timedate }}</p>
-                    <p class="card-text"><strong>Периодичность: </strong>{{ object.frequency }}</p>
+                    <p class="card-text"><strong>Периодичность: </strong>{{ object.get_frequency_display }}</p>
+                    <p class="card-text"><strong>Статус: </strong>{{ object.get_status_display }}</p>
 
                     <a href="{% url 'mailing:update_recipient' object.pk %}"
                        class="btn btn-warning btn-warning-special">Детали</a>

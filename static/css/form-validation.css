@@ -61,6 +61,7 @@ body {
 
 .btn-primary:focus {
     outline: none;
+    box-shadow: none !important;
 }
 
 .btn-warning.btn-warning-special {
@@ -83,6 +84,7 @@ body {
 
 .btn-warning.btn-warning-special:focus {
     outline: none;
+    box-shadow: none !important;
 }
 
 .btn-danger.btn-danger-special {
@@ -105,6 +107,7 @@ body {
 
 .btn-danger.btn-danger-special:focus {
     outline: none;
+    box-shadow: none !important;
 }
 
 input[type="text"], input[type="email"], textarea {

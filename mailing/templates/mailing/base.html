@@ -45,50 +45,5 @@
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/holder.min.js' %}"></script>
 
-     <script>
-         function showDateFields(selectElement) {
-        const datetimeField = document.getElementById("datetimeField");
-        datetimeField.innerHTML = ""; // очистка предыдущего содержимого
-
-        const mailingScheduleDate = "{{ mailing_schedule_date|default:'' }}";
-        const mailingScheduleTime = "{{ mailing_schedule_time|default:'' }}";
-
-        switch (selectElement.value) {
-            case "once":
-                datetimeField.innerHTML = `<input type="datetime-local" class="form-control" name="schedule_date" value="${mailingScheduleDate}">`;
-                break;
-            case "daily":
-                datetimeField.innerHTML = `<input type="time" class="form-control" name="schedule_time" value="${mailingScheduleTime}">`;
-                break;
-            case "weekly":
-                // добавьте логику для выбора дня недели, если mailing имеет день недели
-                datetimeField.innerHTML = `
-                    <input type="time" class="form-control mb-2" name="schedule_time" value="${mailingScheduleTime}">
-                    <select class="form-control" name="schedule_date">
-                    <option>Понедельник</option>
-                    <option>Вторник</option>
-                    <option>Среда</option>
-                    <option>Четверг</option>
-                    <option>Пятница</option>
-                    <option>Суббота</option>
-                    <option>Воскресенье</option>
-                    </select>`;
-                break;
-            case "monthly":
-                datetimeField.innerHTML = `
-                    <input type="time" class="form-control mb-2" name="schedule_time" value="${mailingScheduleTime}">
-                    <input type="number" class="form-control" name="schedule_date" placeholder="Число месяца" min="1" max="31" value="${mailingScheduleDate}">`;
-                break;
-            case "yearly":
-                datetimeField.innerHTML = `
-                    <input type="time" class="form-control mb-2" name="schedule_time" value="${mailingScheduleTime}">
-                    <input type="date" class="form-control" name="schedule_date" placeholder="День и месяц" value="${mailingScheduleDate}">`;
-                break;
-        }
-        datetimeField.style.display = "block"; // показываем блок с датой и временем
-    }
-     </script>
-
-
   </body>
 </html>

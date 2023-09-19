@@ -1,27 +1,29 @@
 {% extends 'mailing/base.html' %}
 {% block content %}
-    <div class="container">
-      <div class="py-5 text-center">
+<div class="container">
+    <div class="py-5 text-center">
         <h2>Создать рассылку</h2>
-        <p class="lead">Пожалуйста, заполните все обязательные поля новой рассылки</p>
-      </div>
+        <p class="lead">Пожалуйста, заполните все обязательные поля рассылки</p>
+    </div>
 
-<div class="row justify-content-center">
-    <div class="col-md-8 order-md-1">
-        <h4 class="mb-3">Новая рассылка</h4>
-        <form class="needs-validation" action="{% url 'mailing:home' %}" method="post" novalidate>
-            {% csrf_token %}
-                {{ form.as_div }}
-                {{ formset.management_form }}
-                {% for sub_form in formset %}
-                    {{ sub_form.as_div }}
-                {% endfor %}
+    <div class="row justify-content-center">
+        <div class="col-md-8 order-md-1">
+            <h4 class="mb-3">Новая рассылка</h4>
 
-              <button class="btn btn-primary btn-lg btn-block" type="submit">Создать</button>
+            <form class="needs-validation" action="{% url 'mailing:home' %}" method="post" novalidate>
+                {% csrf_token %}
 
+                {{ form.as_p }}
+
+                <hr>
+                <h5>Сообщение:</h5>
+
+                {{ message_form.as_p }}
+
+                <button class="btn btn-primary btn-lg btn-block" type="submit"> {{ button }}</button>
             </form>
+
         </div>
     </div>
 </div>
-
 {% endblock %}

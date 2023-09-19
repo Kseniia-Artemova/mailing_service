@@ -9,24 +9,40 @@ from mailing.models import Client, Message, Log, Mailing
 # Create your views here.
 
 
-class HomeView(CreateView):
-    model = Mailing
-    template_name = 'mailing/home.html'
-    form_class = MailingForm
+class MailingAndMessageSaveMixin:
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
 
-        VersionFormset = inlineformset_factory(Message, Mailing, form=MailingForm, extra=1, can_delete=False)
-        if self.request.method == 'POST':
-            formset = VersionFormset(self.request.POST, instance=self.object)
+        if self.request.POST:
+            context_data['message_form'] = MessageForm(self.request.POST)
         else:
-            formset = VersionFormset(instance=self.object)
-
-        context_data['object_list'] = Client.objects.order_by('name')
-        context_data['formset'] = formset
-
+            if self.object and self.object.message:
+                context_data['message_form'] = MessageForm(instance=self.object.message)
+            else:
+                context_data['message_form'] = MessageForm()
         return context_data
+
+    def form_valid(self, form):
+        context_data = self.get_context_data()
+        message_form = context_data['message_form']
+        self.object = form.save(commit=False)
+
+        if message_form.is_valid():
+            message = message_form.save()
+            self.object.message = message
+            self.object.save()
+            return super().form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+
+class HomeView(MailingAndMessageSaveMixin, CreateView):
+    model = Mailing
+    template_name = 'mailing/home.html'
+    form_class = MailingForm
+    success_url = reverse_lazy('mailing:home')
+    extra_context = {'button': 'Создать', }
 
 
 class ClientCreateView(CreateView):
@@ -57,7 +73,7 @@ class ClientListView(ListView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        context_data['object_list'] = Client.objects.order_by('-changing_data')
+        context_data['object_list'] = Client.objects.order_by('name')
         return context_data
 
 
@@ -106,37 +122,20 @@ class MailingListView(ListView):
     template_name = 'mailing/mailing_list.html'
 
 
-class MailingCreateView(CreateView):
+class MailingCreateView(MailingAndMessageSaveMixin, CreateView):
     model = Mailing
     template_name = 'mailing/mailing_form.html'
-    fields = ('recipients', 'start_time', 'end_time', 'frequency', 'message')
+    form_class = MailingForm
+    extra_context = {'button': 'Создать', 'title': 'Создать рассылку'}
     success_url = reverse_lazy('mailing:mailing_list')
-    extra_context = {
-        'object_list': Client.objects.order_by('name'),
-        'title': 'Создать рассылку',
-        'button': 'Создать',
-    }
 
 
-class MailingUpdateView(UpdateView):
+class MailingUpdateView(MailingAndMessageSaveMixin, UpdateView):
     model = Mailing
     template_name = 'mailing/mailing_form.html'
-    fields = ('recipients', 'start_time', 'end_time', 'frequency', 'message')
+    form_class = MailingForm
+    extra_context = {'button': 'Сохранить', 'title': 'Изменить рассылку'}
     success_url = reverse_lazy('mailing:mailing_list')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        mailing = self.get_object()
-        context['title'] = 'Изменить рассылку'
-        context['button'] = 'Сохранить'
-        context['mailing'] = mailing
-        context['mailing_schedule_date'] = mailing.timedate.strftime('%Y-%m-%d')
-        context['mailing_schedule_time'] = mailing.timedate.strftime('%H:%M')
-        print(context['mailing_schedule_date'])
-        print(context['mailing_schedule_time'])
-        context['object_list'] = Client.objects.all()
-        context['recipient_ids'] = list(mailing.recipients.values_list('id', flat=True))
-        return context
 
 
 class MailingDeleteView(DeleteView):

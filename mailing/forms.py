@@ -1,27 +1,62 @@
 from django import forms
+from django.forms import DateTimeInput
+
 from mailing.models import Client, Message, Mailing
 
 
-class ClientForm(forms.ModelForm):
+class StyleFormMixin:
 
-    last_name = forms.CharField()
-    first_name = forms.CharField()
-    father_name = forms.CharField(required=False)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+
+
+class ClientForm(StyleFormMixin, forms.ModelForm):
+
+    comment = forms.CharField(
+        required=False,
+        label='* Комментарий',
+        widget=forms.Textarea()
+    )
 
     class Meta:
         model = Client
         fields = ('email', 'comment')
 
 
-class MessageForm(forms.ModelForm):
+class MessageForm(StyleFormMixin, forms.ModelForm):
 
     class Meta:
         model = Message
         fields = '__all__'
+        labels = {
+            'subject': 'Тема',
+            'body': 'Тело письма',
+        }
+        widgets = {
+            'body': forms.Textarea(attrs={'rows': 3}),
+        }
 
 
-class MailingForm(forms.ModelForm):
+class MailingForm(StyleFormMixin, forms.ModelForm):
+
+    start_time = forms.DateTimeField(
+        label='Время начала',
+        widget=DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'}, format='%Y-%m-%dT%H:%M')
+    )
+    end_time = forms.DateTimeField(
+        label='Время окончания',
+        widget=DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'}, format='%Y-%m-%dT%H:%M')
+    )
+    recipients = forms.ModelMultipleChoiceField(
+        label='Получатели',
+        queryset=Client.objects.all(),
+        widget=forms.SelectMultiple(attrs={'class': 'select2'})
+    )
 
     class Meta:
         model = Mailing
-        exclude = ('status',)
+        exclude = ('status', 'message', 'updated_at')
+
+

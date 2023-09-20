@@ -1,4 +1,4 @@
-{% extends 'mailing/base.html' %}
+{% extends 'base.html' %}
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-8 order-md-1">
@@ -11,14 +11,13 @@
             </div>
 
             {% for object in object_list %}
-            <!-- Карточка контакта -->
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">{{ object.message.subject }}</h5>
-                    <p class="card-text"><strong>Дата: </strong>{{ object.timedate }}</p>
-                    <p class="card-text"><strong>Периодичность: </strong>{{ object.frequency }}</p>
+                    <p class="card-text"><strong>Периодичность: </strong>{{ object.get_frequency_display }}</p>
+                    <p class="card-text"><strong>Статус: </strong>{{ object.get_status_display }}</p>
 
-                    <a href="{% url 'mailing:update_recipient' object.pk %}"
+                    <a href="{% url 'mailing:mailing_card' object.pk %}"
                        class="btn btn-warning btn-warning-special">Детали</a>
                     <a href="{% url 'mailing:update_mailing' object.pk %}"
                        class="btn btn-warning btn-warning-special">Изменить</a>

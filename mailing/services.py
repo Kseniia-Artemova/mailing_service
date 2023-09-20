@@ -6,7 +6,6 @@ from mailing.models import Mailing, Log
 
 
 def change_status_to_started():
-    print('я запустился')
     datetime_now = timezone.now()
     mailing_list_created = Mailing.objects.filter(status='created')
 
@@ -14,12 +13,10 @@ def change_status_to_started():
         if mailing.start_time < datetime_now:
             mailing.status = 'started'
             mailing.save()
-            print('сменили статус')
 
 
 def send_mailing(mailing, client):
     message = mailing.message
-    print('я запустился')
 
     try:
         send_mail(
@@ -62,7 +59,7 @@ def send_mails_regular():
 
                     match mailing.frequency:
                         case 'daily':
-                            if (datetime_now - last_try_date).days >= 1:
+                            if (datetime_now - last_try_date).days >= 0:
                                 send_mailing(mailing=mailing, client=client)
                         case 'weekly':
                             if (datetime_now - last_try_date).days >= 7:

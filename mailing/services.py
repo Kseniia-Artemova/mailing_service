@@ -19,18 +19,18 @@ def send_mailing(mailing, client):
     message = mailing.message
 
     try:
-        send_mail(
+        result = send_mail(
             subject=message.subject,
             message=message.body,
             from_email=settings.EMAIL_HOST_USER,
             recipient_list=[client.email]
         )
-        status = 'successful'
-        print('успешно отправили')
+        if result:
+            status = 'successful'
+        else:
+            status = 'error'
 
     except Exception as error:
-        print(error)
-        print('error')
         status = 'error'
 
     Log.objects.create(
@@ -59,7 +59,7 @@ def send_mails_regular():
 
                     match mailing.frequency:
                         case 'daily':
-                            if (datetime_now - last_try_date).days >= 0:
+                            if (datetime_now - last_try_date).days >= 1:
                                 send_mailing(mailing=mailing, client=client)
                         case 'weekly':
                             if (datetime_now - last_try_date).days >= 7:

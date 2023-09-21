@@ -1,4 +1,6 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import inlineformset_factory
+from django.http import Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
@@ -10,6 +12,11 @@ from mailing.models import Client, Message, Log, Mailing
 
 
 class MailingAndMessageSaveMixin:
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -28,13 +35,22 @@ class MailingAndMessageSaveMixin:
         message_form = context_data['message_form']
         self.object = form.save(commit=False)
 
-        if message_form.is_valid():
+        if message_form.is_valid() and self.request.user.is_authenticated:
             message = message_form.save()
             self.object.message = message
+            self.object.owner = self.request.user
             self.object.save()
             return super().form_valid(form)
         else:
             return self.form_invalid(form)
+
+
+class OnlyForOwnerOrSuperuserMixin:
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        if self.object.owner != self.request.user and not self.request.user.is_superuser:
+            raise Http404
+        return self.object
 
 
 class HomeView(MailingAndMessageSaveMixin, CreateView):
@@ -45,7 +61,7 @@ class HomeView(MailingAndMessageSaveMixin, CreateView):
     extra_context = {'button': 'Создать', }
 
 
-class ClientCreateView(CreateView):
+class ClientCreateView(LoginRequiredMixin, CreateView):
     model = Client
     template_name = 'mailing/recipient_form.html'
     form_class = ClientForm
@@ -64,20 +80,22 @@ class ClientCreateView(CreateView):
 
         form.instance.name = full_name
 
+        self.object = form.save()
+        self.object.owner = self.request.user
+
         return super().form_valid(form)
 
 
-class ClientListView(ListView):
+class ClientListView(LoginRequiredMixin, ListView):
     model = Client
     template_name = 'mailing/recipients_list.html'
 
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data['object_list'] = Client.objects.order_by('name')
-        return context_data
+    def get_queryset(self):
+        queryset = super().get_queryset().filter(owner=self.request.user)
+        return queryset.order_by('name')
 
 
-class ClientUpdateView(UpdateView):
+class ClientUpdateView(LoginRequiredMixin, OnlyForOwnerOrSuperuserMixin, UpdateView):
     model = Client
     template_name = 'mailing/recipient_form.html'
     success_url = reverse_lazy('mailing:recipients_list')
@@ -104,7 +122,7 @@ class ClientUpdateView(UpdateView):
         return super().form_valid(form)
 
 
-class ClientDeleteView(DeleteView):
+class ClientDeleteView(LoginRequiredMixin, OnlyForOwnerOrSuperuserMixin, DeleteView):
     model = Client
     template_name = 'mailing/recipient_delete.html'
     success_url = reverse_lazy('mailing:recipients_list')
@@ -115,13 +133,16 @@ class ClientDeleteView(DeleteView):
         return context_data
 
 
-class MailingListView(ListView):
+class MailingListView(LoginRequiredMixin, ListView):
     model = Mailing
     template_name = 'mailing/mailing_list.html'
-    ordering = ['-updated_at']
+
+    def get_queryset(self):
+        queryset = super().get_queryset().filter(owner=self.request.user)
+        return queryset.order_by('-updated_at')
 
 
-class MailingCreateView(MailingAndMessageSaveMixin, CreateView):
+class MailingCreateView(LoginRequiredMixin, MailingAndMessageSaveMixin, CreateView):
     model = Mailing
     template_name = 'mailing/mailing_form.html'
     form_class = MailingForm
@@ -129,7 +150,7 @@ class MailingCreateView(MailingAndMessageSaveMixin, CreateView):
     success_url = reverse_lazy('mailing:mailing_list')
 
 
-class MailingUpdateView(MailingAndMessageSaveMixin, UpdateView):
+class MailingUpdateView(LoginRequiredMixin, OnlyForOwnerOrSuperuserMixin, MailingAndMessageSaveMixin, UpdateView):
     model = Mailing
     template_name = 'mailing/mailing_form.html'
     form_class = MailingForm
@@ -137,7 +158,7 @@ class MailingUpdateView(MailingAndMessageSaveMixin, UpdateView):
     success_url = reverse_lazy('mailing:mailing_list')
 
 
-class MailingDeleteView(DeleteView):
+class MailingDeleteView(LoginRequiredMixin, OnlyForOwnerOrSuperuserMixin, DeleteView):
     model = Mailing
     template_name = 'mailing/mailing_delete.html'
     success_url = reverse_lazy('mailing:mailing_list')
@@ -148,7 +169,7 @@ class MailingDeleteView(DeleteView):
         return context_data
 
 
-class MailingDetailView(DetailView):
+class MailingDetailView(LoginRequiredMixin, OnlyForOwnerOrSuperuserMixin, DetailView):
     model = Mailing
     template_name = 'mailing/mailing_card.html'
 

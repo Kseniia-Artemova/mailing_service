@@ -55,8 +55,16 @@ class MailingForm(StyleFormMixin, forms.ModelForm):
         widget=forms.SelectMultiple(attrs={'class': 'select2'})
     )
 
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        if user and user.is_authenticated:
+            self.fields['recipients'].queryset = Client.objects.filter(owner=user)
+        else:
+            self.fields['recipients'].queryset = Client.objects.none()
+
     class Meta:
         model = Mailing
-        exclude = ('status', 'message', 'updated_at')
+        exclude = ('status', 'message', 'updated_at', 'owner')
 
 

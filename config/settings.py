@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'mailing',
+    'users',
     'django_crontab',
 ]
 
@@ -121,8 +122,8 @@ USE_I18N = True
 USE_TZ = True
 
 CRONJOBS = [
-    ('* * * * *', 'mailing.services.change_status_to_started', '>> /tmp/cron_test.log 2>&1'),
-    ('* * * * *', 'mailing.services.send_mails_regular', '>> /tmp/cron_test.log 2>&1'),
+    ('*/5 * * * *', 'mailing.services.change_status_to_started', '>> /tmp/cron_test.log 2>&1'),
+    ('*/5 * * * *', 'mailing.services.send_mails_regular', '>> /tmp/cron_test.log 2>&1'),
 ]
 
 # Static files (CSS, JavaScript, Images)
@@ -141,6 +142,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+AUTH_USER_MODEL = 'users.User'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+LOGIN_URL = '/users/'
 
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465

@@ -4,7 +4,7 @@ from django.contrib.auth.views import LoginView as BaseLoginView
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView
-
+from django.contrib import messages
 from users import services
 from users.forms import LoginForm, UserRegisterForm
 from users.models import User
@@ -31,6 +31,7 @@ class RegisterView(CreateView):
             absolute_url = self.request.build_absolute_uri(url)
             services.send_verification_url(email=self.object.email,
                                            url=absolute_url)
+            messages.success(self.request, 'Код верификации отправлен на вашу электронную почту!')
             self.object.save()
 
         return super().form_valid(form)

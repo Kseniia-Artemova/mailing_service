@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import inlineformset_factory
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -45,7 +46,7 @@ class HomeView(MailingAndMessageSaveMixin, CreateView):
     extra_context = {'button': 'Создать', }
 
 
-class ClientCreateView(CreateView):
+class ClientCreateView(LoginRequiredMixin, CreateView):
     model = Client
     template_name = 'mailing/recipient_form.html'
     form_class = ClientForm
@@ -67,7 +68,7 @@ class ClientCreateView(CreateView):
         return super().form_valid(form)
 
 
-class ClientListView(ListView):
+class ClientListView(LoginRequiredMixin, ListView):
     model = Client
     template_name = 'mailing/recipients_list.html'
 
@@ -77,7 +78,7 @@ class ClientListView(ListView):
         return context_data
 
 
-class ClientUpdateView(UpdateView):
+class ClientUpdateView(LoginRequiredMixin, UpdateView):
     model = Client
     template_name = 'mailing/recipient_form.html'
     success_url = reverse_lazy('mailing:recipients_list')
@@ -104,7 +105,7 @@ class ClientUpdateView(UpdateView):
         return super().form_valid(form)
 
 
-class ClientDeleteView(DeleteView):
+class ClientDeleteView(LoginRequiredMixin, DeleteView):
     model = Client
     template_name = 'mailing/recipient_delete.html'
     success_url = reverse_lazy('mailing:recipients_list')
@@ -115,13 +116,13 @@ class ClientDeleteView(DeleteView):
         return context_data
 
 
-class MailingListView(ListView):
+class MailingListView(LoginRequiredMixin, ListView):
     model = Mailing
     template_name = 'mailing/mailing_list.html'
     ordering = ['-updated_at']
 
 
-class MailingCreateView(MailingAndMessageSaveMixin, CreateView):
+class MailingCreateView(LoginRequiredMixin, MailingAndMessageSaveMixin, CreateView):
     model = Mailing
     template_name = 'mailing/mailing_form.html'
     form_class = MailingForm
@@ -129,7 +130,7 @@ class MailingCreateView(MailingAndMessageSaveMixin, CreateView):
     success_url = reverse_lazy('mailing:mailing_list')
 
 
-class MailingUpdateView(MailingAndMessageSaveMixin, UpdateView):
+class MailingUpdateView(LoginRequiredMixin, MailingAndMessageSaveMixin, UpdateView):
     model = Mailing
     template_name = 'mailing/mailing_form.html'
     form_class = MailingForm
@@ -137,7 +138,7 @@ class MailingUpdateView(MailingAndMessageSaveMixin, UpdateView):
     success_url = reverse_lazy('mailing:mailing_list')
 
 
-class MailingDeleteView(DeleteView):
+class MailingDeleteView(LoginRequiredMixin, DeleteView):
     model = Mailing
     template_name = 'mailing/mailing_delete.html'
     success_url = reverse_lazy('mailing:mailing_list')
@@ -148,7 +149,7 @@ class MailingDeleteView(DeleteView):
         return context_data
 
 
-class MailingDetailView(DetailView):
+class MailingDetailView(LoginRequiredMixin, DetailView):
     model = Mailing
     template_name = 'mailing/mailing_card.html'
 

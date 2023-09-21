@@ -1,5 +1,8 @@
 from django.db import models
 
+from users.models import User
+
+
 # Create your models here.
 
 
@@ -8,6 +11,8 @@ class Client(models.Model):
     email = models.EmailField(max_length=60, verbose_name='e-mail')
     name = models.CharField(max_length=150, verbose_name='ФИО')
     comment = models.TextField(null=True, blank=True, verbose_name='Комментарий')
+
+    owner = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='Пользователь')
 
     def __str__(self):
         return f"{self.name} {self.email}"
@@ -53,6 +58,7 @@ class Mailing(models.Model):
 
     recipients = models.ManyToManyField(Client, blank=True, verbose_name='Получатели')
     message = models.ForeignKey(Message, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='Сообщение')
+    owner = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='Пользователь')
 
     def __str__(self):
         return f'{self.message}: {self.status} ({self.frequency})'

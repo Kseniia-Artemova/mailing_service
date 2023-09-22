@@ -3,16 +3,26 @@ import secrets
 from django.contrib.auth.views import LoginView as BaseLoginView
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView
 from django.contrib import messages
 from users import services
-from users.forms import LoginForm, UserRegisterForm
+from users.forms import LoginForm, UserRegisterForm, UserForm
 from users.models import User
 
 
 class LoginView(BaseLoginView):
     template_name = 'users/login.html'
     form_class = LoginForm
+
+
+class UserUpdateView(UpdateView):
+    model = User
+    template_name = 'users/user_update.html'
+    form_class = UserForm
+    success_url = reverse_lazy('users:profile')
+
+    def get_object(self, queryset=None):
+        return self.request.user
 
 
 class RegisterView(CreateView):

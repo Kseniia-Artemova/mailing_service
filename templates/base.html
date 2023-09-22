@@ -29,6 +29,7 @@
         {% if user.is_authenticated %}
             <a href="{% url 'mailing:recipients_list' %}" class="btn btn-outline-secondary" type="button">Получатели</a>
             <a href="{% url 'mailing:mailing_list' %}" class="btn btn-outline-secondary ml-2" type="button">Рассылки</a>
+            <a href="{% url 'users:profile' %}" class="btn btn-outline-secondary ml-2" type="button">Профиль</a>
             <a href="{% url 'users:logout' %}" class="btn btn-outline-secondary ml-2" type="button">Выйти</a>
         {% else %}
             <a href="{% url 'users:registration' %}" class="btn btn-outline-secondary" type="button">Регистрация</a>

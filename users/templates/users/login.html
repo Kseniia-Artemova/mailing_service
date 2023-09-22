@@ -2,7 +2,6 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-6 order-md-1">
-        <h4 class="mb-3 text-center">{{ title }}</h4>
         {% include 'users/includes/user_card.html' %}
         {% if messages %}
             <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true">

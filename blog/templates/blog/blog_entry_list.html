@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 order-md-1">
+        <h4 class="mb-3 text-center">Блог</h4>
+
+        <div class="container mt-5">
+
+            <div class="mb-4">
+                <a href="{% url 'mailing:new_mailing' %}" class="btn btn-primary">Создать новую запись</a>
+            </div>
+
+            {% for object in object_list %}
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="card-title">{{ object.title }}</h5>
+                    {% if object.image %}
+                        <img src="{{ object.image.url }}" alt="{{ object.title }}" class="card-image">
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <div class="content-container limited-container">
+                        <p class="card-text">{{ object.content|linebreaks }}</p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="button-container">
+                        <a href="{% url 'blog:entry_detail' object.pk %}" class="btn btn-warning btn-warning-special">Открыть полностью</a>
+                        <a href="{% url 'blog:update_entry' object.pk %}" class="btn btn-warning btn-warning-special">Изменить</a>
+                        <a href="{% url 'blog:delete_entry' object.pk %}" class="btn btn-danger btn-danger-special">Удалить</a>
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

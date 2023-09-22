@@ -38,7 +38,7 @@ body {
 }
 
 .custom-select-arrow-adjust {
-    background-position-x: 95%; /* Регулируйте этот процент, чтобы визуально подвинуть стрелку */
+    background-position-x: 95%;
 }
 
 .btn-primary {
@@ -112,33 +112,33 @@ body {
 
 input[type="text"], input[type="email"], textarea {
     font-weight: bold;
-    color: #000;  /* Яркий черный цвет */
+    color: #000;
 }
 
 input[type="text"]::placeholder, input[type="email"]::placeholder, textarea::placeholder {
     font-weight: normal;
-    color: #aaa;  /* Бледный серый цвет */
+    color: #aaa;
 }
 
 .center-content {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 80vh; /* Занимает 80% от высоты экрана */
+    min-height: 80vh;
 }
 
 .content-box {
     border: 1px solid #ddd;
     padding: 20px;
-    box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1); /* тень для выделения блока */
+    box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
 }
 
 .content-box h2 {
-    font-size: 24px; /* Увеличиваем размер текста заголовка */
+    font-size: 24px;
 }
 
 .content-box p {
-    font-size: 18px; /* Увеличиваем размер основного текста */
+    font-size: 18px;
 }
 
 .static-textarea {
@@ -153,7 +153,35 @@ input[type="text"]::placeholder, input[type="email"]::placeholder, textarea::pla
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
     overflow: auto;
-    resize: none; /* Убираем возможность растягивания */
-    min-height: 100px; /* Минимальная высота */
+    resize: none;
+    min-height: 100px;
 }
 
+.card-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-top: 10px;
+    display: block;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.button-container {
+    margin-top: auto;
+    text-align: center;
+}
+
+.limited-container {
+    display: -webkit-box;
+    -webkit-line-clamp: 4; /* Ограничиваем количество видимых строк до 5 */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    max-height: 10em; /* Примерное ограничение по высоте, можно корректировать */
+}

@@ -14,18 +14,20 @@
             <div class="card mb-3">
                 <div class="card-header">
                     <h5 class="card-title">{{ object.title }}</h5>
+                </div>
+                <div class="card-content-wrapper">
                     {% if object.image %}
                         <img src="{{ object.image.url }}" alt="{{ object.title }}" class="card-image">
                     {% endif %}
-                </div>
-                <div class="card-body">
-                    <div class="content-container limited-container">
-                        <p class="card-text">{{ object.content|linebreaks }}</p>
+                    <div class="card-blog-content">
+                        <div class="content-container limited-container">
+                            <p class="card-text">{{ object.content|linebreaks }}</p>
+                        </div>
                     </div>
                 </div>
                 <div class="card-footer">
                     <div class="button-container">
-                        <a href="{% url 'blog:entry_detail' object.pk %}" class="btn btn-warning btn-warning-special">Открыть полностью</a>
+                        <a href="{% url 'blog:entry_detail' object.pk %}" class="btn btn-warning btn-warning-special">Открыть запись</a>
                         <a href="{% url 'blog:update_entry' object.pk %}" class="btn btn-warning btn-warning-special">Изменить</a>
                         <a href="{% url 'blog:delete_entry' object.pk %}" class="btn btn-danger btn-danger-special">Удалить</a>
                     </div>

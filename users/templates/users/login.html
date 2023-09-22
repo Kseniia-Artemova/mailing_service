@@ -3,19 +3,7 @@
 <div class="row justify-content-center">
     <div class="col-md-6 order-md-1">
         <h4 class="mb-3 text-center">{{ title }}</h4>
-        <div class="col-md-4 mx-auto">
-            <h5 class="text-center mb-3">Войдите в аккаунт</h5>
-            <form action="" method="post">
-                {% csrf_token %}
-                {% for field in form %}
-                    <div class="form-group">
-                        <label for="{{ field.id_for_label }}" class="d-flex justify-content-center">{{ field.label }}</label>
-                        {{ field }}
-                    </div>
-                {% endfor %}
-                <button class="btn btn-primary btn-lg btn-block" type="submit">Вход</button>
-            </form>
-        </div>
+        {% include 'users/includes/user_card.html' %}
         {% if messages %}
             <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">

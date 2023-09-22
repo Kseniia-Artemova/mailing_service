@@ -1,0 +1,13 @@
+<div class="col-md-4 mx-auto">
+    <h5 class="text-center mb-3">Войдите в аккаунт</h5>
+    <form action="" method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}" class="d-flex justify-content-center">{{ field.label }}</label>
+                {{ field }}
+            </div>
+        {% endfor %}
+        <button class="btn btn-primary btn-lg btn-block" type="submit">Вход</button>
+    </form>
+</div>

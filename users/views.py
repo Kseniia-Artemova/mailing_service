@@ -31,7 +31,7 @@ class RegisterView(CreateView):
             absolute_url = self.request.build_absolute_uri(url)
             services.send_verification_url(email=self.object.email,
                                            url=absolute_url)
-            messages.success(self.request, 'Код верификации отправлен на вашу электронную почту!')
+            messages.success(self.request, 'Ссылка для верификации отправлена на вашу электронную почту!')
             self.object.save()
 
         return super().form_valid(form)
@@ -41,6 +41,7 @@ def verification(request, verification_code):
 
     user = User.objects.get(verification_code=verification_code)
     user.is_active = True
+    user.verification_code = None
     user.save()
     return redirect(reverse('users:login'))
 

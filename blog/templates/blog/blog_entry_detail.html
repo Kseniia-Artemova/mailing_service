@@ -2,15 +2,7 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-8 order-md-1">
-        <h4 class="mb-3 text-center">Блог</h4>
-
         <div class="container mt-5">
-
-            <div class="mb-4">
-                <a href="{% url 'blog:create_entry' %}" class="btn btn-primary">Создать новую запись</a>
-            </div>
-
-            {% for object in object_list %}
             <div class="card mb-3">
                 <div class="card-header">
                     <h5 class="card-title">{{ object.title }}</h5>
@@ -20,7 +12,7 @@
                     <img src="{{ object.image.url }}" alt="{{ object.title }}" class="card-image">
                     {% endif %}
                     <div class="card-blog-content">
-                        <div class="content-container limited-container">
+                        <div class="content-container">
                             <p class="card-text">{{ object.content|linebreaks }}</p>
                         </div>
                     </div>
@@ -31,15 +23,12 @@
                 </div>
                 <div class="card-footer">
                     <div class="button-container">
-                        <a href="{% url 'blog:entry_detail' object.pk %}" class="btn btn-warning btn-warning-special">Открыть
-                            запись</a>
+                        <a href="{{ referer }}" class="btn btn-warning btn-warning-special">Вернуться</a>
                         <a href="{% url 'blog:update_entry' object.pk %}" class="btn btn-warning btn-warning-special">Изменить</a>
                         <a href="{% url 'blog:delete_entry' object.pk %}" class="btn btn-danger btn-danger-special">Удалить</a>
                     </div>
                 </div>
             </div>
-            {% endfor %}
-
         </div>
     </div>
 </div>

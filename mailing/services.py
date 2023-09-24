@@ -2,16 +2,17 @@ from django.utils import timezone
 from django.core.mail import send_mail
 
 from config import settings
+from mailing import constants
 from mailing.models import Mailing, Log
 
 
 def change_status_to_started():
     datetime_now = timezone.now()
-    mailing_list_created = Mailing.objects.filter(status='created')
+    mailing_list_created = Mailing.objects.filter(status=Mailing.STATUSES[0][0])
 
     for mailing in mailing_list_created:
         if mailing.start_time < datetime_now:
-            mailing.status = 'started'
+            mailing.status = Mailing.STATUSES[1][0]
             mailing.save()
 
 
@@ -26,12 +27,12 @@ def send_mailing(mailing, client):
             recipient_list=[client.email]
         )
         if result:
-            status = 'successful'
+            status = Log.STATUSES[0][0]
         else:
-            status = 'error'
+            status = Log.STATUSES[1][0]
 
-    except Exception as error:
-        status = 'error'
+    except Exception:
+        status = Log.STATUSES[1][0]
 
     Log.objects.create(
         last_try=timezone.now(),
@@ -43,11 +44,11 @@ def send_mailing(mailing, client):
             
 def send_mails_regular():
     datetime_now = timezone.now()
-    mailing_list_started = Mailing.objects.filter(status='started')
+    mailing_list_started = Mailing.objects.filter(status=Mailing.STATUSES[1][0])
 
     for mailing in mailing_list_started:
         if mailing.end_time < datetime_now:
-            mailing.status = 'finished'
+            mailing.status = Mailing.STATUSES[2][0]
         elif (mailing.start_time < datetime_now) and (mailing.end_time > datetime_now):
             for client in mailing.recipients.all():
                 mailing_log = Log.objects.filter(
@@ -56,17 +57,12 @@ def send_mails_regular():
                 )
                 if mailing_log.exists():
                     last_try_date = mailing_log.order_by('-last_try').first().last_try
+                    timedelta = (datetime_now - last_try_date).days
+                    frequency = constants.SCHEDULE.get(mailing.frequency)
 
-                    match mailing.frequency:
-                        case 'daily':
-                            if (datetime_now - last_try_date).days >= 1:
-                                send_mailing(mailing=mailing, client=client)
-                        case 'weekly':
-                            if (datetime_now - last_try_date).days >= 7:
-                                send_mailing(mailing=mailing, client=client)
-                        case 'monthly':
-                            if (datetime_now - last_try_date).days >= 30:
-                                send_mailing(mailing=mailing, client=client)
+                    if timedelta >= frequency:
+                        send_mailing(mailing=mailing, client=client)
+
                 else:
                     send_mailing(mailing=mailing, client=client)
 

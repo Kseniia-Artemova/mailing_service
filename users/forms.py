@@ -1,4 +1,5 @@
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django import forms
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
 from django.core.exceptions import ValidationError
 
 from users.models import User
@@ -36,3 +37,16 @@ class UserRegisterForm(StyleFormMixin, UserCreationForm):
                     raise ValidationError('Номер телефона не должен содержать буквы!')
 
             return cleaned_data.strip()
+
+
+class UserForm(StyleFormMixin, UserChangeForm):
+
+    class Meta:
+        model = User
+        fields = ('phone', 'username')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['password'].widget = forms.HiddenInput()
+        self.fields['password'].label = False

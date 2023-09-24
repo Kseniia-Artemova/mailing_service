@@ -1,42 +1,15 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container">
-    <div class="py-5 text-center">
-        <h2>Создать рассылку</h2>
-        <p class="lead">Пожалуйста, заполните все обязательные поля рассылки</p>
-    </div>
+<div class="row justify-content-center">
+    <div class="col-md-8 order-md-1">
+        <h4 class="mb-3 text-center">Блог</h4>
 
-    <div class="row justify-content-center position-relative mt-5">
-        <div class="col-md-6">
-            <h4 class="mb-3 text-center">Новая рассылка</h4>
-            <form class="needs-validation" action="{% url 'mailing:home' %}" method="post" novalidate>
-                {% csrf_token %}
-                {{ form.as_p }}
-                <hr>
-                <h5>Сообщение:</h5>
-                {{ message_form.as_p }}
-                <button class="btn btn-primary btn-lg btn-block" type="submit"> {{ button }}</button>
-            </form>
-        </div>
+        <div class="container mt-5">
 
-        <div class="position-absolute" style="right: -20%; top: 0; width: 25%;">
-            <div class="card custom-border mb-3">
-                <div class="card-header">Статистика рассылки</div>
-                <div class="card-body">
-                    <h4 class="card-title">Общая информация:</h4>
-                    <p class="card-text">
-                        <strong>Всего рассылок:</strong> {{ total_mailings }}<br>
-                        <strong>Активных рассылок:</strong> {{ active_mailings }}<br>
-                        <strong>Количество контактов:</strong> {{ unique_clients }}
-                    </p>
-                </div>
+            <div class="mb-4">
+                <a href="{% url 'blog:create_entry' %}" class="btn btn-primary">Создать новую запись</a>
             </div>
-        </div>
-    </div>
 
-    <!-- Ряд для других карточек -->
-    <div class="row justify-content-center mt-5">
-        <div class="col-md-10">
             {% for object in object_list %}
             <div class="card mb-3">
                 <div class="card-header">
@@ -66,5 +39,9 @@
                 </div>
             </div>
             {% endfor %}
+
         </div>
-        {% endblock %}
+    </div>
+</div>
+
+{% endblock %}

@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 
+from blog.models import BlogEntry
 from mailing.forms import ClientForm, MailingForm, MessageForm
 from mailing.models import Client, Message, Log, Mailing
 
@@ -59,6 +60,15 @@ class HomeView(MailingAndMessageSaveMixin, CreateView):
     form_class = MailingForm
     success_url = reverse_lazy('mailing:home')
     extra_context = {'button': 'Создать', }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        mailings = self.request.user.mailing_set.all()
+        context['total_mailings'] = len(mailings)
+        context['active_mailings'] = len(mailings.filter(status=Mailing.STATUSES[1][0]))
+        context['unique_clients'] = len(self.request.user.client_set.values('email').distinct())
+        context['object_list'] = BlogEntry.objects.order_by('?')[:3]
+        return context
 
 
 class ClientCreateView(LoginRequiredMixin, CreateView):

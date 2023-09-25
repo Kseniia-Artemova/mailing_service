@@ -27,7 +27,7 @@ load_dotenv(dotenv_path=dotenv_path)
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG') == 'True'
 
 ALLOWED_HOSTS = []
 
@@ -124,9 +124,11 @@ USE_I18N = True
 USE_TZ = True
 
 CRONJOBS = [
-    ('*/5 * * * *', 'mailing.services.change_status_to_started', '>> /tmp/cron_test.log 2>&1'),
-    ('*/5 * * * *', 'mailing.services.send_mails_regular', '>> /tmp/cron_test.log 2>&1'),
+    ('*/5 * * * *', 'mailing.services.change_status_to_started'),
+    ('*/5 * * * *', 'mailing.services.send_mails_regular'),
 ]
+
+CRONTAB_COMMAND_SUFFIX = f'>> {BASE_DIR / "crontab_log.log"} 2>&1'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -151,17 +153,17 @@ LOGOUT_REDIRECT_URL = '/'
 
 LOGIN_URL = '/users/'
 
-EMAIL_HOST = 'smtp.yandex.ru'
-EMAIL_PORT = 465
-EMAIL_HOST_USER = 'noreply@oscarbot.ru'
-EMAIL_HOST_PASSWORD = 'AsTSNVv7pun9'
-EMAIL_USE_SSL = True
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT'))
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL') == 'True'
 
-CACHE_ENABLED = True
+CACHE_ENABLED = os.getenv('CACHE_ENABLED') == 'True'
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379",
+        "LOCATION": os.getenv('LOCATION'),
         "TIMEOUT": 300,
     }
 }

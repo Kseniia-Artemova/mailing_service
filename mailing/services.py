@@ -6,6 +6,7 @@ from mailing.models import Mailing, Log
 
 
 def change_status_to_started():
+    print('run')
     datetime_now = timezone.now()
     mailing_list_created = Mailing.objects.filter(status=Mailing.STATUSES[0][0])
 

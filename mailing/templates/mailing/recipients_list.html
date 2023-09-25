@@ -22,9 +22,11 @@
                         <p class="card-text text-muted"><strong>Создан: </strong>{{ object.owner }}</p>
                     {% endif %}
 
+                    {% if user.is_superuser or user == object.owner %}
                     <a href="{% url 'mailing:update_recipient' object.pk %}"
                        class="btn btn-warning btn-warning-special">Изменить</a>
                     <a href="{% url 'mailing:delete_recipient' object.pk %}" class="btn btn-danger btn-danger-special">Удалить</a>
+                    {% endif %}
                 </div>
             </div>
 

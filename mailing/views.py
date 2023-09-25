@@ -6,6 +6,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 
 from blog.models import BlogEntry
+from mailing import services
 from mailing.forms import ClientForm, MailingForm, MessageForm
 from mailing.models import Client, Message, Log, Mailing
 
@@ -65,10 +66,8 @@ class HomeView(MailingAndMessageSaveMixin, CreateView):
         context = super().get_context_data(**kwargs)
         user = self.request.user
         if user.is_authenticated:
-            mailings = user.mailing_set.all()
-            context['total_mailings'] = len(mailings)
-            context['active_mailings'] = len(mailings.filter(status=Mailing.STATUSES[1][0]))
-            context['unique_clients'] = len(user.client_set.values('email').distinct())
+            card_info = services.cache_statistic_card(user)
+            context.update(card_info)
         context['object_list'] = BlogEntry.objects.order_by('?')[:3]
         return context
 

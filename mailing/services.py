@@ -1,8 +1,7 @@
+from django.core.cache import cache
 from django.utils import timezone
 from django.core.mail import send_mail
-
 from config import settings
-from mailing import constants
 from mailing.models import Mailing, Log
 
 
@@ -58,11 +57,33 @@ def send_mails_regular():
                 if mailing_log.exists():
                     last_try_date = mailing_log.order_by('-last_try').first().last_try
                     timedelta = (datetime_now - last_try_date).days
-                    frequency = constants.SCHEDULE.get(mailing.frequency)
+                    frequency = Mailing.SCHEDULE.get(mailing.frequency)
 
-                    if timedelta >= frequency:
+                    if frequency and timedelta >= frequency:
                         send_mailing(mailing=mailing, client=client)
 
                 else:
                     send_mailing(mailing=mailing, client=client)
 
+
+def cache_statistic_card(user):
+    if settings.CACHE_ENABLED:
+        key = 'card_info'
+        card_info = cache.get(key)
+        if card_info is None:
+            mailings = user.mailing_set.all()
+            card_info = {
+                'total_mailings': len(mailings),
+                'active_mailings': len(mailings.filter(status=Mailing.STATUSES[1][0])),
+                'unique_clients': len(user.client_set.values('email').distinct())
+            }
+            cache.set(key, card_info)
+    else:
+        mailings = user.mailing_set.all()
+        card_info = {
+            'total_mailings': len(mailings),
+            'active_mailings': len(mailings.filter(status=Mailing.STATUSES[1][0])),
+            'unique_clients': len(user.client_set.values('email').distinct())
+        }
+
+    return card_info

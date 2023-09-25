@@ -24,8 +24,10 @@
                 <div class="card-footer">
                     <div class="button-container">
                         <a href="{{ referer }}" class="btn btn-warning btn-warning-special">Вернуться</a>
-                        <a href="{% url 'blog:update_entry' object.pk %}" class="btn btn-warning btn-warning-special">Изменить</a>
-                        <a href="{% url 'blog:delete_entry' object.pk %}" class="btn btn-danger btn-danger-special">Удалить</a>
+                        {% if user.is_superuser or is_manager %}
+                            <a href="{% url 'blog:update_entry' object.pk %}" class="btn btn-warning btn-warning-special">Изменить</a>
+                            <a href="{% url 'blog:delete_entry' object.pk %}" class="btn btn-danger btn-danger-special">Удалить</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

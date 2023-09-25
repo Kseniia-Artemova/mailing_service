@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
@@ -6,13 +7,20 @@ from blog.forms import BlogEntryForm
 from blog.models import BlogEntry
 
 
+class ManagerOrSuperuserMixin(UserPassesTestMixin):
+    def test_func(self):
+        user = self.request.user
+        return user.groups.filter(name='Managers').exists() or user.is_superuser
+
+
 class BlogEntryListView(ListView):
     model = BlogEntry
     template_name = 'blog/blog_entry_list.html'
     ordering = '-publication_date'
 
 
-class BlogEntryCreateView(CreateView):
+class BlogEntryCreateView(ManagerOrSuperuserMixin, CreateView):
+
     model = BlogEntry
     form_class = BlogEntryForm
     template_name = 'blog/blog_entry_form.html'
@@ -23,7 +31,7 @@ class BlogEntryCreateView(CreateView):
     }
 
 
-class BlogEntryUpdateView(UpdateView):
+class BlogEntryUpdateView(ManagerOrSuperuserMixin, UpdateView):
     model = BlogEntry
     form_class = BlogEntryForm
     template_name = 'blog/blog_entry_form.html'
@@ -34,7 +42,7 @@ class BlogEntryUpdateView(UpdateView):
     }
 
 
-class BlogEntryDeleteView(DeleteView):
+class BlogEntryDeleteView(ManagerOrSuperuserMixin, DeleteView):
     model = BlogEntry
     template_name = 'blog/blog_entry_delete.html'
     success_url = reverse_lazy('blog:blog_entry_list')

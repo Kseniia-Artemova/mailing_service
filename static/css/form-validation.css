@@ -202,3 +202,7 @@ input[type="text"]::placeholder, input[type="email"]::placeholder, textarea::pla
     border-color: #2eb8c3a8;
 }
 
+.pb-5, .py-5 {
+    padding-bottom: 0rem !important;
+    padding-top: 0rem !important;
+}

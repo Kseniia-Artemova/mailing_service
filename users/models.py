@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class User(AbstractUser):
+    """Модель для описания пользователя"""
 
     email = models.EmailField(unique=True, verbose_name='E-mail')
     phone = models.CharField(null=True, blank=True, max_length=60, verbose_name='Телефон')

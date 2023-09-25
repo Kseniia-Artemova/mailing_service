@@ -5,13 +5,11 @@
         <h4 class="mb-3 text-center">Получатели</h4>
 
         <div class="container mt-5">
-            <!-- Кнопка создания нового контакта -->
             <div class="mb-4">
                 <a href="{% url 'mailing:new_recipient' %}" class="btn btn-primary">Создать новый</a>
             </div>
 
             {% for object in object_list %}
-            <!-- Карточка контакта -->
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">{{ object.name }}</h5>

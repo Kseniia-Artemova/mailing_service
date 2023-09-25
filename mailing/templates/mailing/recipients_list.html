@@ -17,6 +17,10 @@
                     <h5 class="card-title">{{ object.name }}</h5>
                     <p class="card-text"><strong>Email:</strong> {{ object.email }}</p>
                     <p class="card-text">{{ object.comment }}</p>
+                    {% if user.is_superuser or is_manager %}
+                        <br>
+                        <p class="card-text text-muted"><strong>Создан: </strong>{{ object.owner }}</p>
+                    {% endif %}
 
                     <a href="{% url 'mailing:update_recipient' object.pk %}"
                        class="btn btn-warning btn-warning-special">Изменить</a>

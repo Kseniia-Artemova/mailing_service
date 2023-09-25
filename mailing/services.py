@@ -2,11 +2,17 @@ from django.core.cache import cache
 from django.utils import timezone
 from django.core.mail import send_mail
 from config import settings
-from mailing.models import Mailing, Log
+from mailing.models import Mailing, Log, Client
+from users.models import User
 
 
-def change_status_to_started():
-    print('run')
+def change_status_to_started() -> None:
+    """
+    Функция, позволяющая изменить статус всех рассылок,
+    у которых уже наступило время старта на момент вызова функции,
+    с 'created' на 'started'
+    """
+
     datetime_now = timezone.now()
     mailing_list_created = Mailing.objects.filter(status=Mailing.STATUSES[0][0])
 
@@ -16,7 +22,15 @@ def change_status_to_started():
             mailing.save()
 
 
-def send_mailing(mailing, client):
+def send_mailing(mailing: Mailing, client: Client) -> None:
+    """
+    Функция отправки сообщения конкретному клиенту рассылки.
+
+    Сразу после отправки сообщения создается объект лога,
+    который описывает результат отправки (успешно/неуспешно)
+    и фиксирует время попытки
+    """
+
     message = mailing.message
 
     try:
@@ -42,7 +56,16 @@ def send_mailing(mailing, client):
     )
 
             
-def send_mails_regular():
+def send_mails_regular() -> None:
+    """
+    Функция, позволяющая отправить письма клиентам,
+    указанным в качестве получателей в тех рассылках, статус которых указан
+    как 'started'.
+
+    Если время и дата окончания рассылки меньше, чем время на момент вызова функции,
+    то рассылка переводится в статус 'finished'
+    """
+
     datetime_now = timezone.now()
     mailing_list_started = Mailing.objects.filter(status=Mailing.STATUSES[1][0])
 
@@ -67,7 +90,12 @@ def send_mails_regular():
                     send_mailing(mailing=mailing, client=client)
 
 
-def cache_statistic_card(user):
+def cache_statistic_card(user: User) -> dict:
+    """
+    Функция для кеширования загружаемой информации,
+    которая используется в карточке статистики юзера на домашней странице
+    """
+
     if settings.CACHE_ENABLED:
         key = 'card_info'
         card_info = cache.get(key)

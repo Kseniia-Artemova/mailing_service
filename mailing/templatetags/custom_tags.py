@@ -3,6 +3,8 @@ from mailing.models import Client
 
 register = Library()
 
+# блок фильтров для получения ФИО из единой строки
+
 
 @register.filter
 def last_name(object):

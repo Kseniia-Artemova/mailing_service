@@ -3,6 +3,7 @@ from blog.models import BlogEntry
 
 
 class BlogEntryForm(forms.ModelForm):
+    """Форма для записи блога"""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

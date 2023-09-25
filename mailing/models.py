@@ -3,10 +3,8 @@ from django.db import models
 from users.models import User
 
 
-# Create your models here.
-
-
 class Client(models.Model):
+    """Модель для описания клиента рассылки"""
 
     email = models.EmailField(max_length=60, verbose_name='e-mail')
     name = models.CharField(max_length=150, verbose_name='ФИО')
@@ -24,6 +22,7 @@ class Client(models.Model):
 
 
 class Message(models.Model):
+    """Модель для сообщения конкретной рассылки"""
 
     subject = models.CharField(default='No subject', max_length=100, verbose_name='Тема')
     body = models.TextField(null=True, blank=True, verbose_name='Тело письма')
@@ -37,6 +36,10 @@ class Message(models.Model):
 
 
 class Mailing(models.Model):
+    """
+    Модель для описания рассылки, её содержимого и настроек.
+    Ключевая модель приложения
+    """
 
     FREQUENCY = (
         ('daily', 'ежедневно'),
@@ -76,6 +79,10 @@ class Mailing(models.Model):
 
 
 class Log(models.Model):
+    """
+    Модель для описания лога рассылки, создаваемого в момент отправки
+    сообщения рассылки конкретному клиенту этой рассылки
+    """
 
     STATUSES = (
         ('successful', 'успешно'),

@@ -5,6 +5,7 @@ from mailing.models import Client, Message, Mailing
 
 
 class StyleFormMixin:
+    """Миксин для подключения единого стиля к формам"""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -13,6 +14,11 @@ class StyleFormMixin:
 
 
 class ClientForm(StyleFormMixin, forms.ModelForm):
+    """
+    Форма для модели Клиента (Client).
+
+    Устанавливает поле comment как необязательное с соответствующей пометкой
+    """
 
     comment = forms.CharField(
         required=False,
@@ -26,6 +32,11 @@ class ClientForm(StyleFormMixin, forms.ModelForm):
 
 
 class MessageForm(StyleFormMixin, forms.ModelForm):
+    """
+    Форма для модели Сообщения (Message).
+
+    Устанавливает по умолчанию высоту области ввода тела письма равной 3 строкам
+    """
 
     class Meta:
         model = Message
@@ -40,6 +51,14 @@ class MessageForm(StyleFormMixin, forms.ModelForm):
 
 
 class MailingForm(StyleFormMixin, forms.ModelForm):
+    """
+    Форма для модели Рассылки (Mailing).
+    Ключевая модель приложения.
+
+    Устанавливает специальные виджеты на поля типа DateTimeField (в виде календаря)
+    и для поля recipients загружает коллекцию клиентов для множественного выбора.
+    Коллекция клиентов зависит от группы, к которой принадлежит пользователь и его статуса
+    """
 
     start_time = forms.DateTimeField(
         label='Время начала',
@@ -56,6 +75,13 @@ class MailingForm(StyleFormMixin, forms.ModelForm):
     )
 
     def __init__(self, *args, **kwargs):
+        """
+        На основе переданного при создании объекта модели User
+        загружает из базы данных и передает в форму коллекцию клиентов,
+        которые ссылаются на этого пользователя.
+        В случае если юзер не авторизован, передает пустую коллекцию
+        """
+
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         if user and user.is_authenticated:
@@ -66,5 +92,3 @@ class MailingForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = Mailing
         exclude = ('status', 'message', 'updated_at', 'owner')
-
-

@@ -1,9 +1,10 @@
 import secrets
 
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.views import LoginView as BaseLoginView
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, ListView
 from django.contrib import messages
 from users import services
 from users.forms import LoginForm, UserRegisterForm, UserForm
@@ -54,4 +55,23 @@ def verification(request, verification_code):
     user.verification_code = None
     user.save()
     return redirect(reverse('users:login'))
+
+
+class UserListView(UserPassesTestMixin, ListView):
+    model = User
+    template_name = 'users/users_list.html'
+    ordering = 'email'
+
+    def test_func(self):
+        user = self.request.user
+        is_manager = user.groups.filter(name='Managers').exists()
+        return user.is_superuser or is_manager
+
+
+def deactivate_user(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    user.is_active = not user.is_active
+    user.save()
+
+    return redirect('users:users_list')
 

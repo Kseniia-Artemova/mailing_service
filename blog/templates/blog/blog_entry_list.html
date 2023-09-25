@@ -5,10 +5,11 @@
         <h4 class="mb-3 text-center">Блог</h4>
 
         <div class="container mt-5">
-
-            <div class="mb-4">
-                <a href="{% url 'blog:create_entry' %}" class="btn btn-primary">Создать новую запись</a>
-            </div>
+            {% if user.is_superuser or is_manager %}
+                <div class="mb-4">
+                    <a href="{% url 'blog:create_entry' %}" class="btn btn-primary">Создать новую запись</a>
+                </div>
+            {% endif %}
 
             {% for object in object_list %}
             <div class="card mb-3">
@@ -33,8 +34,10 @@
                     <div class="button-container">
                         <a href="{% url 'blog:entry_detail' object.pk %}" class="btn btn-warning btn-warning-special">Открыть
                             запись</a>
-                        <a href="{% url 'blog:update_entry' object.pk %}" class="btn btn-warning btn-warning-special">Изменить</a>
-                        <a href="{% url 'blog:delete_entry' object.pk %}" class="btn btn-danger btn-danger-special">Удалить</a>
+                        {% if user.is_superuser or is_manager %}
+                            <a href="{% url 'blog:update_entry' object.pk %}" class="btn btn-warning btn-warning-special">Изменить</a>
+                            <a href="{% url 'blog:delete_entry' object.pk %}" class="btn btn-danger btn-danger-special">Удалить</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

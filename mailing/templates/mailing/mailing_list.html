@@ -17,18 +17,24 @@
                     <p class="card-text"><strong>Периодичность: </strong>{{ object.get_frequency_display }}</p>
                     <p class="card-text"><strong>Статус: </strong>{{ object.get_status_display }}</p>
 
-                    <a href="{% url 'mailing:mailing_card' object.pk %}"
-                       class="btn btn-warning btn-warning-special">Детали</a>
-                    <a href="{% url 'mailing:update_mailing' object.pk %}"
-                       class="btn btn-warning btn-warning-special">Изменить</a>
-                    <a href="{% url 'mailing:delete_mailing' object.pk %}" class="btn btn-danger btn-danger-special">Удалить</a>
+                    {% if user.is_superuser or is_manager %}
+                        {% if object.status != 'finished' %}
+                            <a href="{% url 'mailing:deactivate_mailing' object.pk %}" class="btn btn-warning btn-warning-special float-right">Отключить</a>
+                        {% else %}
+                            <button class="btn btn-warning btn-warning-special float-right" disabled>Отключить</button>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if not is_manager or user == object.owner %}
+                        <a href="{% url 'mailing:mailing_card' object.pk %}" class="btn btn-warning btn-warning-special">Детали</a>
+                        <a href="{% url 'mailing:update_mailing' object.pk %}" class="btn btn-warning btn-warning-special">Изменить</a>
+                        <a href="{% url 'mailing:delete_mailing' object.pk %}" class="btn btn-danger btn-danger-special">Удалить</a>
+                    {% endif %}
                 </div>
             </div>
-
             {% endfor %}
 
         </div>
     </div>
 </div>
-
 {% endblock %}

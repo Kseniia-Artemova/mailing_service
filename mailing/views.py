@@ -1,7 +1,7 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.forms import inlineformset_factory
 from django.http import Http404
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 
@@ -63,10 +63,12 @@ class HomeView(MailingAndMessageSaveMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        mailings = self.request.user.mailing_set.all()
-        context['total_mailings'] = len(mailings)
-        context['active_mailings'] = len(mailings.filter(status=Mailing.STATUSES[1][0]))
-        context['unique_clients'] = len(self.request.user.client_set.values('email').distinct())
+        user = self.request.user
+        if user.is_authenticated:
+            mailings = user.mailing_set.all()
+            context['total_mailings'] = len(mailings)
+            context['active_mailings'] = len(mailings.filter(status=Mailing.STATUSES[1][0]))
+            context['unique_clients'] = len(user.client_set.values('email').distinct())
         context['object_list'] = BlogEntry.objects.order_by('?')[:3]
         return context
 
@@ -101,7 +103,12 @@ class ClientListView(LoginRequiredMixin, ListView):
     template_name = 'mailing/recipients_list.html'
 
     def get_queryset(self):
-        queryset = super().get_queryset().filter(owner=self.request.user)
+        user = self.request.user
+        is_manager = user.groups.filter(name='Managers').exists()
+        if user.is_superuser or is_manager:
+            queryset = super().get_queryset().all()
+        else:
+            queryset = super().get_queryset().filter(owner=user)
         return queryset.order_by('name')
 
 
@@ -148,7 +155,12 @@ class MailingListView(LoginRequiredMixin, ListView):
     template_name = 'mailing/mailing_list.html'
 
     def get_queryset(self):
-        queryset = super().get_queryset().filter(owner=self.request.user)
+        user = self.request.user
+        is_manager = user.groups.filter(name='Managers').exists()
+        if user.is_superuser or is_manager:
+            queryset = super().get_queryset().all()
+        else:
+            queryset = super().get_queryset().filter(owner=user)
         return queryset.order_by('-updated_at')
 
 
@@ -179,7 +191,21 @@ class MailingDeleteView(LoginRequiredMixin, OnlyForOwnerOrSuperuserMixin, Delete
         return context_data
 
 
-class MailingDetailView(LoginRequiredMixin, OnlyForOwnerOrSuperuserMixin, DetailView):
+class MailingDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = Mailing
     template_name = 'mailing/mailing_card.html'
+
+    def test_func(self):
+        user = self.request.user
+        is_manager = user.groups.filter(name='Managers').exists()
+        is_owner = user == self.get_object().owner
+        return user.is_superuser or is_manager or is_owner
+
+
+def deactivate_mailing(request, pk):
+    mailing = get_object_or_404(Mailing, pk=pk)
+    mailing.status = Mailing.STATUSES[2][0]
+    mailing.save()
+
+    return redirect('mailing:mailing_list')
 

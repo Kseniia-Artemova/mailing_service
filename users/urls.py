@@ -1,5 +1,6 @@
 from django.contrib.auth.views import LogoutView
 from django.urls import path
+from django.views.decorators.cache import cache_page
 
 from users.apps import UsersConfig
 from users.views import RegisterView, LoginView, verification, UserUpdateView, UserListView, deactivate_user

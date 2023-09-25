@@ -50,6 +50,13 @@ class Mailing(models.Model):
         ('finished', 'завершена')
     )
 
+    # Расписание рассылок
+    SCHEDULE = {
+        FREQUENCY[0][0]: 1,
+        FREQUENCY[1][0]: 7,
+        FREQUENCY[2][0]: 30
+    }
+
     start_time = models.DateTimeField(verbose_name='Время начала')
     end_time = models.DateTimeField(null=True, blank=True, verbose_name='Время окончания')
     frequency = models.CharField(max_length=7, choices=FREQUENCY, verbose_name='Периодичность')

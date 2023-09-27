@@ -1,6 +1,8 @@
+from smtplib import SMTPException
+
 from django.core.cache import cache
 from django.utils import timezone
-from django.core.mail import send_mail
+from django.core.mail import send_mail, mail_admins
 from config import settings
 from mailing.models import Mailing, Log, Client
 from users.models import User
@@ -45,8 +47,9 @@ def send_mailing(mailing: Mailing, client: Client) -> None:
         else:
             status = Log.STATUSES[1][0]
 
-    except Exception:
+    except SMTPException as error:
         status = Log.STATUSES[1][0]
+        mail_admins('Ошибка в приложении', error)
 
     Log.objects.create(
         last_try=timezone.now(),

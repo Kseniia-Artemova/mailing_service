@@ -41,7 +41,7 @@
 ![Список рассылок](http://joxi.net/Q2KJqZMUgoKV4m.jpg)
 
 #### Пример страницы со списком пользователей
-![Пользователи](http://joxi.net/82318YQHwbvNar.jpg)
+![Пользователи](https://i.imgur.com/lar2IJZ.png.jpg)
 
 
 :shipit:
